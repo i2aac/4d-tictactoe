@@ -160,45 +160,82 @@ struct vector add(struct vector a, struct vector b){ //Returns sum of struct vec
     return r;
 }
 
+bool zero_vector(struct vector a){ //Returns false if vector is a zero vector
+    return (a.w + a.x + a.y + a.z == 0);
+}
+
+/*
+The next two functions are where the magic happens. They're an implementation of a simple but rather inefficient algorithm to check for
+straight lines on a 4-D tic-tac-toe board.
+
+First, two things must be established:
+
+1. Every space on the board has a position vector associated with it. This position vector is the sum of an integer amount of 
+unit vectors, corresponding to that space's coordinates.
+
+2. Every line on the board can be expressed as a position vector, where the endpoint of the vector is the endpoint of the line,
+relative to one of two ends of the line. This position vector can be divided by the board side length, n, so produce a direction
+vector. The direction vector comprises of at most 1 unit vector in each axis, and always travels directly from one space to
+another.
+
+The algorithm cycles through every single space with the desired marking in it. It then assumes that the space represents one
+of two ends of a line.
+
+For that space, it then checks through all possible direction vectors. (Yes, it is a finite amount, directly corresponding to
+the amount of dimensions of the board.) For every direction vector that leads to another space with the desired marking when
+added to the current space's positional vector, the algorithm continues to add that direction vector to the resultant vector
+until it stops leading to spaces with the desired marking. Once this occurs, the algorithm compares the amount of times it had
+to add the directional vector, to the side length of the board. Since all winning lines must be n spaces long, this comparison
+immediately reveals if the discovered line has won the game or not.
+
+There is much optimization to be done to prevent redundant checking of spaces, but I have implemented none of it here.
+*/
+
 int line(char ****board, int s, struct vector position, struct vector direction, int length){ //Follows a "line" through on a board until it stops. Returns its length.
 
-    if(direction.w == 0 && direction.x == 0 && direction.y == 0 && direction.z == 0){ //Prevents an infinite loop
-        return (-1);
-    }
+    struct vector new_position = add(position, direction); //A new position vector is created by adding both vectors passed in. This results in a new position vector
 
-    struct vector new_position = add(position, direction);
     if(in_bounds(s, new_position) && board[new_position.w][new_position.x][new_position.y][new_position.z] == board[position.w][position.x][position.y][position.z]){
+        //If the new position vector leads to another space with the desired marking, the function calls itself again to repeat the previous addition.
         return line(board, s, new_position, direction, length + 1);
     }
 
-    return length;
+    return length; //Returns length if there ended up being no valid continuation of the line
 }
 
-bool victory(char p, char ****board, int s){ //This isn't a particularly efficient algorithm, but I'm hoping that a player will win before it gets too slow. Returns true if given marker has won.
+bool victory(char p, char ****board, int s){ //This function returns true if it finds a winning pattern made from the given marking
 
     for(int i = 0; i < s; i++){
         for(int j = 0; j < s; j++){
             for(int k = 0; k < s; k++){
                 for(int l = 0; l < s; l++){
-                    if(board[i][j][k][l] == p){
+
+                    //The above loops cycle through every space
+
+                    if(board[i][j][k][l] == p){ //This limits the next part to only spaces with the desired marking
+
                         for(int a = (-1); a <= 1; a++){
                             for(int b = (-1); b <= 1; b++){
                                 for(int c = (-1); c <= 1; c++/*C++ hehehe*/){
                                     for(int d = (-1); d <= 1; d++){
-                                        struct vector direction;
+
+                                        //The above loops cycle through all possible direction vectors for a winning line
+
+                                        struct vector direction; //See? the direction vector
                                         direction.w = a;
                                         direction.x = b;
                                         direction.y = c;
                                         direction.z = d;
 
-                                        struct vector position;
+                                        struct vector position; //Its most memory efficient if the position vector doesn't get made in an earlier loop
                                         position.w = i;
                                         position.x = j;
                                         position.y = k;
                                         position.z = l;
 
-                                        if(line(board, s, position, direction, 1) == s){
-                                            return true;
+                                        if(!zero_vector(direction) && line(board, s, position, direction, 1) == s){ //This passes off both vectors to the line() function to see how far it can go
+                                            //It should also be noted that passing in zero vectors for the direction vector would cause line() to loop infinitely, so they are pruned beforehand
+                                            return true; //There is no need to check for more winning patterns after one is found
                                         }
                                     }
                                 }
@@ -210,7 +247,7 @@ bool victory(char p, char ****board, int s){ //This isn't a particularly efficie
         }
     }
 
-    return false;
+    return false; //Returns false if no winning lines found
 }
 
 void print_file(char name[MAX_FILENAME]){
@@ -292,23 +329,23 @@ int main(){
     putchar('\n');
     print_board_grid(board, s);
 
-    do{
+    do{ //This is the actual game part of the program
 
-        if(turn == 'O'){
+        if(turn == 'O'){ //after every turn, this bit of code switches whose turn it is
             turn = 'X';
         }
         else{
             turn = 'O';
         }
 
-        putchar('\n');
+        putchar('\n'); //this code handles taking player input, and allowing them to make a move
         move = input_move(board, s, turn);
         board[move.w][move.x][move.y][move.z] = turn;
 
-        putchar('\n');
+        putchar('\n'); //prints board
         print_board_grid(board, s);
 
-    }while(!victory(turn, board, s));
+    }while(!victory(turn, board, s)); //after every turn, the game checks if the most recent move has won the game
 
     printf("\n%c's have won!\n", turn);
 
