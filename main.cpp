@@ -81,6 +81,52 @@ bool in_bounds(int bound, vector position){ //Returns true if a vector is in bou
     return (0 <= position.w && position.w < bound && 0 <= position.x && position.x < bound && 0 <= position.y && position.y < bound && 0 <= position.z && position.z < bound);
 }
 
+int input_size(){ //Prompts user to input board size, and returns a user-selected size once a valid value has been selected.
+    int size;
+    char answer;
+
+    do{
+        printf("Choose a size (a positive integer) for the 4-D board: ");
+        scanf("%d", &size);
+
+        if(size <= 0){
+            printf("\nThat is not a positive integer. ");
+        }
+        if(size > 5){
+            printf("\n%d is a very large board size. Boards this large may have trouble rendering on some screens.\n", size);
+            do{
+                printf("\nAre you sure you wish to use %d as the board size? (y/n): ", size);
+                scanf(" %c", &answer);
+            }while(answer != 'y' && answer != 'n' && answer != 'Y' && answer != 'N');
+
+            if(answer == 'n' || answer == 'N'){
+                size = (-1);
+                putchar('\n');
+            }
+        }
+
+    }while(size <= 0);
+
+    return size;
+}
+
+vector input_move(char ****board, int s, char turn){ //Prompts user to input a move, and returns a user-selected placement for their marker once a valid value has been chosen.
+
+    vector placement;
+
+    do{
+        printf("%c's turn. Enter a coordinate (of the format w x y z) to mark: ", turn);
+        scanf("%d %d %d %d", &placement.w, &placement.x, &placement.y, &placement.z);
+
+        if(!in_bounds(s, placement) || board[placement.w][placement.x][placement.y][placement.z] != ' '){
+            printf("\nThat is not a valid move. ");
+        }
+
+    }while(!in_bounds(s, placement) || board[placement.w][placement.x][placement.y][placement.z] != ' ');
+
+    return placement;
+}
+
 vector add(vector a, vector b){ //Returns sum of vector A and B.
     vector r;
     r.w = a.w + b.w;
@@ -145,11 +191,11 @@ bool victory(char p, char ****board, int s){ //This isn't a particularly efficie
 
 int main(){
 
-    int s = 3, w, x, y, z; //The length of your tic tac toe board. Typically set to 3 when in two dimensions.
+    int s = 3; //The length of your tic tac toe board. Typically set to 3 when in two dimensions.
     char turn = 'O';
+    vector move;
 
-    printf("Choose a size (a positive integer) for the 4-D board: ");
-    scanf("%d", &s);
+    s = input_size();
 
     //this mess of code allocates the 4d array
     char ****board = (char****) malloc(s * sizeof(char***));
@@ -174,6 +220,7 @@ int main(){
         }
     }
 
+    putchar('\n');
     print_board_grid(board, s);
 
     do{
@@ -185,12 +232,9 @@ int main(){
             turn = 'O';
         }
 
-        printf("\n%c's turn. Enter a coordinate (of the format w x y z) to mark: ", turn);
-        scanf("%d %d %d %d", &w, &x, &y, &z);
-
-        if(board[w][x][y][z] == ' '){
-            board[w][x][y][z] = turn;
-        }
+        putchar('\n');
+        move = input_move(board, s, turn);
+        board[move.w][move.x][move.y][move.z] = turn;
 
         putchar('\n');
         print_board_grid(board, s);
