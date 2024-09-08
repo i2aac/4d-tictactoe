@@ -1,0 +1,87 @@
+This iteration of 4-D tic-tac-toe uses 2-D cross sections to project the 4-D board. A board of length 3 could look as follows:
+
+ |X|     | |     | |
+-----   -----   -----
+O| |     | |     |X|
+-----   -----   -----
+ | |     |O|X    |O|
+
+ | |     |X|     | |
+-----   -----   -----
+X| |    O| |     |O|
+-----   -----   -----
+ | |    O| |     |X|
+ 
+ | |     | |    O| |
+-----   -----   -----
+ |X|    O|X|     | |
+-----   -----   -----
+X| |     | |     | |
+/
+First, let us visualize what the board represents before we define a coordinate system. To make it easier to visualize how the board might work, you can break it up into 2 different projections.
+
+Each row of 2-D boards represents a projection of a 3-D board. If you stack each 2-D cross-section on top of each other, you would be able to build a 3-D board of tic-tac-toe. You can think of moving down a row as viewing a 3-D board at different points in space.
+
+ |X|     | |     | |
+-----   -----   -----
+O| |     | |     |X|    <--- A 3-D board projected onto a 2-D space
+-----   -----   -----
+ | |     |O|X    |O|
+/
+When you put together every 3-D board built from each row, you get the full 4-D board. This is difficult to visualize, so try to think of it as the same 3-D board at different points in time. As you move down the rows, you're viewing the same 3-D board at different points in time.
+
+ |X|     | |     | |
+-----   -----   -----
+O| |     | |     |X|    <--- 3-D board in the morning
+-----   -----   -----
+ | |     |O|X    |O|
+
+ | |     |X|     | |
+-----   -----   -----
+X| |    O| |     |O|    <--- 3-D board in the afternoon
+-----   -----   -----
+ | |    O| |     |X|
+ 
+ | |     | |    O| |
+-----   -----   -----
+ |X|    O|X|     | |    <--- 3-D board in the evening
+-----   -----   -----
+X| |     | |     | |
+/
+Now, let us define the coordinate system. First, let us begin with the 2-D axes.
+
+The y-axis refers to the rows of all 2-D cross-sections, and the z-axis refers to all columns on those same 2-D cross-sections. They are numbered from 0, to n - 1, where n is the board size. For example, an X is found on the following cross-section, at y = 0, z = 2.
+
+  y
+z   0 1 2
+  0  | |X
+    -----
+  1  | |
+    -----
+  2  | |
+
+All 2-D cross-sections begin with their respective sets of y and z coordinates at 0.
+/
+The w-axis refers a specific row of 2-D cross-sections. Alternatively, you can think of the w-axis as referring to a specific projection of a 3-D board, such that there is one per row. The x-axis refers to a specific column on a row of 2-D cross-sections. Alternatively, you can think of the x-axis as referring to a specific layer of a projection of a 3-D board. They are numbered from 0 to n -1, where n is the board size. For example, an O is found on the following board, at w = 1, x = 2, y = 0, z = 1.
+    | |     | |     | |
+   -----   -----   -----
+#1  | |     | |     | |
+   -----   -----   -----
+    | |     | |     | |
+
+    | |     | |     |O|
+   -----   -----   -----
+#2  | |     | |     | |
+   -----   -----   -----
+    | |     | |     | |
+
+    | |     | |     | |
+   -----   -----   -----
+#3  | |     | |     | |
+   -----   -----   -----
+    | |     | |     | |
+/
+If you struggle to visualize the board even with the given space and time analogies, you may also think of the board as simply being comprised of adjacent 2-D boards. In this interpretation, the w-axis moves you up and down to a specific board, and the x-xis moves you left and right to a specific board. The y-axis moves you up and down specific spaces of a board, and the z-axis moves you left and right specific spaces of a board.
+
+In summary, the w and x axes choose the 2-D cross-section, and the y and z axes choose the space on that cross section.
+!

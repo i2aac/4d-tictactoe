@@ -2,6 +2,19 @@
 #include <malloc.h>
 #include <stdbool.h>
 
+#define MAX_FILENAME 64 //The maximum length of any files printed by the program
+#define MAX_YES_NO 256 //The maximum length of any yes-or-no question asked by the program
+
+char texts[][MAX_FILENAME] = { //None of these strings actually need to be stored beforehand, but it avoids compiler warnings if they are
+"lesson.txt",
+"tutorial.txt"
+}, questions[][MAX_YES_NO] = {
+"\nIt is understood that 4-D tic-tac-toe may be difficult to understand as a game to mere 3-D beings. Would you like a lesson on 4-D tic-tac-toe?",
+"\nIt is understood that the used coordinate system may not be immediately obvious to mere 3-D beings. Would you like a tutorial on how the board works?",
+"\nContinue?",
+"\nAre you sure you wish to use this number as the board size?"
+};
+
 struct vector{ //A 4-D struct vector
     int w, x, y, z;
 };
@@ -82,6 +95,21 @@ bool in_bounds(int bound, struct vector position){ //Returns true if a struct ve
     return (0 <= position.w && position.w < bound && 0 <= position.x && position.x < bound && 0 <= position.y && position.y < bound && 0 <= position.z && position.z < bound);
 }
 
+bool yes_or_no(char question[MAX_YES_NO]){ //Returns true if yes, false if no
+    char answer;
+
+    do{
+        printf("%s (y/n): ", question);
+        scanf(" %c", &answer);
+    }while(answer != 'y' && answer != 'n' && answer != 'Y' && answer != 'N');
+
+    if(answer == 'y' || answer == 'Y'){
+        return true;
+    }
+
+    return false;
+}
+
 int input_size(){ //Prompts user to input board size, and returns a user-selected size once a valid value has been selected.
     int size;
     char answer;
@@ -95,12 +123,7 @@ int input_size(){ //Prompts user to input board size, and returns a user-selecte
         }
         if(size > 5){
             printf("\n%d is a very large board size. Boards this large may have trouble rendering on some screens.\n", size);
-            do{
-                printf("\nAre you sure you wish to use %d as the board size? (y/n): ", size);
-                scanf(" %c", &answer);
-            }while(answer != 'y' && answer != 'n' && answer != 'Y' && answer != 'N');
-
-            if(answer == 'n' || answer == 'N'){
+            if(!yes_or_no(questions[3])){
                 size = (-1);
                 putchar('\n');
             }
@@ -190,12 +213,57 @@ bool victory(char p, char ****board, int s){ //This isn't a particularly efficie
     return false;
 }
 
+void print_file(char name[MAX_FILENAME]){
+
+    char c, answer;
+    FILE *fptr = fopen(name, "r");
+    
+    if(fptr == NULL){
+        printf("%s not found.\n", name);
+        return;
+    }
+
+    c = fgetc(fptr);
+    while(c != '!'){
+
+        if(c == '/'){
+            if(yes_or_no(questions[2])){
+                c = ' ';
+            }
+            else{
+                break;
+            }
+        }
+
+        putchar(c);
+        c = fgetc(fptr);
+    }
+
+    fclose(fptr);
+
+    return;
+}
+
 int main(){
 
     int s = 3; //The length of your tic tac toe board. Typically set to 3 when in two dimensions.
     char turn = 'O';
+
     struct vector move;
 
+    printf("Welcome to 4-D tic-tac-toe.\n");
+
+    if(yes_or_no(questions[0])){
+        putchar('\n');
+        print_file(texts[0]);
+    }
+
+    if(yes_or_no(questions[1])){
+        putchar('\n');
+        print_file(texts[1]);
+    }
+
+    putchar('\n');
     s = input_size();
 
     //this mess of code allocates the 4d array
