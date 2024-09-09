@@ -42,9 +42,9 @@ O| |
 -----
  | |O
 /
-Pythagorean lines should not be thought of as encompassing all diagonal lines, as this is only the case in 2-D. Higher dimensional games of tic-tac-toe contain diagonal lines whose plane is not orthogonal to all other cross-sectional boards.
+Pythagorean lines should not be thought of as encompassing all diagonal lines, as this is only the case in 2-D. Higher dimensional games of tic-tac-toe contain diagonal lines whose plane is orthogonal to other cross-sectional boards.
 /
-Now, let us express each winning case of 2-D tic-tac-toe using its 1-D components. The first and simplest case is that in which one of the 2-D boards entirely contains an orthogonal line.
+Now, let us express each winning case of 2-D tic-tac-toe using its 1-D components. The first and simplest case is that in which one of the 1-D boards entirely contains an orthogonal line.
 
 #1  | |
    -----
