@@ -80,7 +80,7 @@ The final case is Pythagorean lines.
 
 This case is the most complex, but it can be simplified to the third and final rule that may be used to understand higher dimensional tic-tac-toe:
 /
-3. All Pythagorean lines may be expressed as an orthogonal line just one dimension lower, whose markings (X's or O's) are sequentially spread across adjacent planes.
+3. All Pythagorean lines may be expressed as an orthogonal or Pythagorean line just one dimension lower, whose markings (X's or O's) are sequentially spread across adjacent planes.
 /
 For example, if we were to again overlay each of the 1-D boards over each other, the X's from the previous figure would form an orthogonal line.
 /
@@ -121,7 +121,7 @@ Notice that grid #2 displays a winning pattern that would also work in 2-D, if y
 /
 Notice that what would be an orthogonal line in 3-D, appears as a marker being placed at the same location in every component planes, when the board is split into , when the board is split into its component planes.
 /
-3. All Pythagorean lines may be expressed as a line just one dimension lower, whose component markings (X's or O's) are sequentially spread across adjacent dimensions.
+3. AAll Pythagorean lines may be expressed as an orthogonal or Pythagorean line just one dimension lower, whose markings (X's or O's) are sequentially spread across adjacent planes.
 
 #1      #2      #3
 X| |     | |     | |
@@ -209,7 +209,7 @@ Notice that the demonstrated winning pattern would also win a 3-D game that cons
 /
 Notice that the demonstrated orthogonal line is in the exact same place in every 3-D cross-section.
 /
-3. All Pythagorean lines may be expressed as an orthogonal line just one dimension lower, whose component markings (X's or O's) are sequentially spread across adjacent dimensions.
+3. All Pythagorean lines may be expressed as an orthogonal or Pythagorean line just one dimension lower, whose markings (X's or O's) are sequentially spread across adjacent planes.
  
    X| |     | |     | |
    -----   -----   -----
